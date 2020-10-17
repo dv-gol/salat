@@ -3,4 +3,4 @@
 
 Приложение было раздаботано в среде Microsoft Visual Studio Community 2019.
 
-![Alt-текст](img/screen.jpg "Код")
+![Alt-текст](img/screen1.jpg "Код")
