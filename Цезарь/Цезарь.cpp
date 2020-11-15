@@ -1,113 +1,85 @@
-﻿#include <stdio.h>
-#include <locale>
+﻿#include <string>
+#include <iostream>
+#include <Windows.h>
+#include <ctime>
+#include <fstream>
+using namespace std;
+string time() {
+	char str[26];
+	time_t result = time(NULL);
+	ctime_s(str, sizeof str, &result);
 
-#define ENG 26
-#define RUS 32
-
-void encrypt(int n)
-{
-    FILE* fp1, * fp2;
-    fopen_s(&fp1, "input.txt", "r");// открытие файла
-    fopen_s(&fp2, "output.txt", "w");
-    int flag;
-    char c;
-    c = getc(fp1);// посимвольный ввод
-    while (!feof(fp1))//проверка конца файла
-    {
-        flag = 0; //обработан ли текущий символ
-        if (c >= 'A' && c <= 'Z') //проверка принадлежности вводимых данных на принадлежность к английскому алфавиту верхнего регистра
-        {
-            c = c + (n % ENG); //Остаток от деления  берем для того, чтобы при n >= ENG убрать лишний "проход"
-            if (c > 'Z') c = 'A' + (c - 'Z') - 1; //шифрование
-            fprintf(fp2, "%c", c); // если считанный символ не буква,то он записывает без изменений
-            flag = 1;
-        }
-        if (c >= 'a' && c <= 'z') //проверка принадлежности вводимых данных на принадлежность к английскому алфавиту нижнего регистра
-        {
-            c = c + (n % ENG);
-            if (c > 'z') c = 'a' + (c - 'z') - 1; //шифрование
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (c >= 'А' && c <= 'Я') //проверка принадлежности вводимых данных на принадлежность к русскому алфавиту верхнего регистра
-        {
-            c = c + (n % RUS);
-            if (c > 'Я') c = 'А' + (c - 'Я') - 1;
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (c >= 'а' && c <= 'я') //проверка принадлежности вводимых данных на принадлежность к русскому алфавиту нижнего регистра
-        {
-            c = c + (n % RUS);
-            if (c > 'я') c = 'а' + (c - 'я') - 1;
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (!flag) fprintf(fp2, "%c", c);
-        c = getc(fp1);
-    }
-    fclose(fp1);
-    fclose(fp2);
+	return str;
 }
-
-void decipher(int n)
-{
-    FILE* fp1, * fp2;
-    fopen_s(&fp1, "output.txt", "r");
-    fopen_s(&fp2, "123.txt", "w");
-    int flag;
-    char c;
-    c = getc(fp1);
-    while (!feof(fp1))
-    {
-        flag = 0;
-        if (c >= 'A' && c <= 'Z')
-        {
-            c = c - (n % ENG);
-            if (c < 'A') c = 'Z' - ('A' - c) + 1;
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (c >= 'a' && c <= 'z')
-        {
-            c = c - (n % ENG);
-            if (c < 'a') c = 'z' - ('a' - c) + 1;
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (c >= 'А' && c <= 'Я')
-        {
-            c = c - (n % RUS);
-            if (c < 'А') c = 'Я' - ('А' - c) + 1;
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (c >= 'а' && c <= 'я')
-        {
-            c = c - (n % RUS);
-            if (c < 'а') c = 'я' - ('а' - c) + 1;
-            fprintf(fp2, "%c", c);
-            flag = 1;
-        }
-        if (!flag) fprintf(fp2, "%c", c);
-        c = getc(fp1);
-    }
-    fclose(fp1); //закрытие файла
-    fclose(fp2);
-}
-
 int main()
 {
-    setlocale(LC_ALL, "Russian"); //возможность отображения русских символов в консоли
-    int n;
-    printf("Введите натуральное n: ");
-    scanf_s("%d", &n);
-    getchar(); //нужен для того, чтобы поймать символ клавиши ENTER, нажатой при вводе числа n
-    if (n < 1) return 0;
-    printf("Чтобы зашифровать текст введите a, расшифровать b: ");
-    char c;
-    scanf_s("%c", &c, 1);
-    if (c == 'a') encrypt(n);
-    if (c == 'b') decipher(n);
-    return 0;
+	string path = "log.txt";
+	setlocale(LC_ALL, "Russian");
+	string start_line, final_line, command, test_offset;
+	char symbol;
+	int offset;
+	bool key;
+	ofstream fout(path, ios_base::app);
+	fout << "INFO : The program started : " << time();
+	do {//цикл ввода значения сдвига(будет работать пока пользователь не введет число корректно)
+		key = true;
+		cout << "Введите велечину сдвига: ";
+		//cin >> test_offset;
+		getline(cin, test_offset);
+		for (int i = 0; i < test_offset.length(); i++) {
+			if ((!isdigit(test_offset[i])) and (test_offset[i] != '-')) {
+				key = false;
+				cout << "Должно быть введено только число. Попробуйте еще раз." << endl;
+				fout << "WARNING : The user entered an invalid offset value : " << time();
+				break;
+			}
+		}
+	} while (!key);
+
+
+	offset = atoi(test_offset.c_str());
+	do {//цикл ввода команды
+		cout << "Введите a для кодирования или b для расшифровки: ";
+
+		getline(cin, command);
+
+		if (command == "b") {
+			offset *= -1;
+		}
+		else if (command != "a") {
+			cout << "Команда введена некорректно. Попробуйте еще раз." << endl;
+			fout << "WARNING : The user entered an invalid command : " << time();
+		}
+	} while ((command != "a") and (command != "b"));
+	cout << "Введите предложение(нелатинские символы не будут зашифрованы или расшифрованы): ";
+	getline(cin, start_line);
+	cout << endl;
+
+	final_line.resize(start_line.length());
+	for (int i = 0; i < start_line.length(); i++) {//цикл, который проходит все символы введенной строки и сдвигает символы латиницы в соответствии с UNICODE
+		if ((start_line[i] > 96) and (start_line[i] < 123)) {
+			symbol = start_line[i] += offset;
+			symbol = char(97 + (26 * (1 - (symbol / 97))) + ((symbol - 97) % 26));
+			final_line[i] = symbol;
+		}
+		else if ((start_line[i] > 64) and (start_line[i] < 91)) {
+			symbol = start_line[i] += offset;
+			symbol = char(64 + (26 * (1 - (symbol / 64))) + ((symbol - 64) % 26));
+			final_line[i] = symbol;
+		}
+
+		else {
+			final_line[i] = start_line[i];//если символы не латинские, то они сохраняются 
+		}
+	}
+	cout << "Результат: " << final_line;//вывод результата
+	if (command == "a") {
+		fout << "INFO : Message successfully encoded : " << time();
+	}
+	else {
+		fout << "INFO : Message successfully decoded : " << time();
+	}
+	fout << "INFO : The program completed : " << time();
+	fout << endl;
+	fout.close();
 }

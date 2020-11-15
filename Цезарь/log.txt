@@ -1,0 +1,24 @@
+INFO : The program started : Sun Nov 15 13:01:10 2020
+INFO : Message successfully encoded : Sun Nov 15 13:01:34 2020
+INFO : The program completed : Sun Nov 15 13:01:34 2020
+
+INFO : The program started : Sun Nov 15 13:03:40 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:03:47 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:03:50 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:03:53 2020
+INFO : Message successfully encoded : Sun Nov 15 13:04:01 2020
+INFO : The program completed : Sun Nov 15 13:04:01 2020
+
+INFO : The program started : Sun Nov 15 13:04:10 2020
+WARNING : The user entered an invalid offset value : Sun Nov 15 13:04:15 2020
+INFO : Message successfully decoded : Sun Nov 15 13:04:34 2020
+INFO : The program completed : Sun Nov 15 13:04:34 2020
+
+INFO : The program started : Sun Nov 15 13:05:08 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:05:16 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:05:21 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:05:24 2020
+WARNING : The user entered an invalid command : Sun Nov 15 13:05:31 2020
+INFO : Message successfully encoded : Sun Nov 15 13:05:37 2020
+INFO : The program completed : Sun Nov 15 13:05:37 2020
+
